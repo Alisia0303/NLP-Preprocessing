@@ -1,8 +1,9 @@
 import re
 
 class ParagraphSegmentation:
-    def __init__(self, text):
+    def __init__(self, text, language):
         self.text = text
+        self.language = language
         self.lst_latin_nums = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X']
         self.lst_index_paragraph = []
         self.is_start = False
@@ -11,22 +12,40 @@ class ParagraphSegmentation:
         self.idx_end = 0
 
     def is_start_paragraph(self, char, prechar, nextchar):
-        if (char.isupper()) and (prechar==' '):
-            return True
-        elif (char.isnumeric() or (char in self.lst_latin_nums)) and (nextchar in ['.', ')', ',']) and (prechar==' '):
-            return True
-        elif (char == '-') and (prechar==' '):
-            return True
-        else:
-            return False
+        if self.language == 'vietnamese':
+            if (char.isupper()) and (prechar==' '):
+                return True
+            elif (char.isnumeric() or (char in self.lst_latin_nums)) and (nextchar in ['.', ')', ',']) and (prechar==' '):
+                return True
+            elif (char == '-') and (prechar==' '):
+                return True
+            else:
+                return False
+        elif self.language == 'english':
+            if (char.isupper()) :
+                return True
+            elif (char.isnumeric() or (char in self.lst_latin_nums)) and (nextchar in ['.', ')', ',']) :
+                return True
+            elif (char == '-') :
+                return True
+            else:
+                return False
 
     def is_end_paragraph(self, char, nextchar, nextnextchar):
-        if (char in ['.', ':', '?', '!']) and (nextchar == '\n') and (nextnextchar == ' '):
-            return True
-        elif (char == '\n') and (nextchar == '\n'):
-            return True
-        else:
-            return False
+        if self.language == 'vietnamese':
+            if (char in ['.', ':', '?', '!']) and (nextchar == '\n') and (nextnextchar == ' '):
+                return True
+            elif (char == '\n') and (nextchar == '\n'):
+                return True
+            else:
+                return False
+        elif self.language == 'english':
+            if (char in ['.', ':', '?', '!']) and (nextchar == '\n') :
+                return True
+            elif (char == '\n') and (nextchar == '\n'):
+                return True
+            else:
+                return False
 
     def get_paragraphs(self):
         for idx in range(len(self.text)):
@@ -46,7 +65,7 @@ class ParagraphSegmentation:
                     self.is_end = self.is_end_paragraph(self.text[idx], self.text[idx+1], None)
                 else:
                     self.is_end = self.is_end_paragraph(self.text[idx], self.text[idx+1], self.text[idx+2])
-                if self.is_end == True:
+                if (self.is_end == True) or (idx==(len(self.text) - 1)):
                     self.idx_end = idx
                     self.lst_index_paragraph.append([self.idx_start, self.idx_end])
                     self.is_start = False #reset variables to find new paragraph
@@ -58,6 +77,10 @@ class ParagraphSegmentation:
             paragraph_contents.append(self.text[idx[0]:idx[1]])
         print(self.lst_index_paragraph)
         return paragraph_contents
+
+    def remove_count_number(self, text):
+        pattern = r'[0-9(.|)|,]'
+        return re.sub(pattern, '', text)
 
     # function to remove numbers
     def remove_numbers_vn(self, text):
@@ -76,3 +99,6 @@ class ParagraphSegmentation:
     # function to convert string to lowercase
     def to_lowercase(self, text):
         return text.lower()
+
+    
+
