@@ -34,8 +34,8 @@ class SentenceSegmentation:
         for idx in lst_dots:
             if self.is_decimal(paragraph[idx-1], paragraph[idx+1]):
                 lst_remove.append(idx)
-            elif self.is_count_number(paragraph[idx-1], paragraph[idx+1]):
-                lst_remove.append(idx)
+            # elif self.is_count_number(paragraph[idx-1], paragraph[idx+1]):
+            #     lst_remove.append(idx)
         for char in lst_remove:
             paragraph = paragraph.replace(paragraph[char], '')
         return paragraph 
