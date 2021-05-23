@@ -17,3 +17,6 @@ if __name__ == "__main__":
     paragraphs = process.step_paragraph_segmentation()
     print("==========TEXT AFTER PARAGRAPH SEGMENTATION==========")
     print(paragraphs)
+    sentences = process.step_sentence_segmentation(paragraphs)
+    print("==========TEXT AFTER SENTENCE SEGMENTATION===========")
+    print(sentences)

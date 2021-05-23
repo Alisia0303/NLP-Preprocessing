@@ -10,8 +10,9 @@ sys.path.insert(0, parent_dir)
 
 from utils.clean import CleanData
 from utils.paragraph_segmentation import ParagraphSegmentation
+from utils.sentence_segmentation import SentenceSegmentation
 
-class PreProcessing(CleanData, ParagraphSegmentation):
+class PreProcessing(CleanData, ParagraphSegmentation, SentenceSegmentation):
     def __init__(self, text):
         self.text = text
         ParagraphSegmentation.__init__(self, self.text, 'english')
@@ -24,14 +25,24 @@ class PreProcessing(CleanData, ParagraphSegmentation):
     def step_paragraph_segmentation(self):
         self.get_paragraphs()
         paragraphs = self.show_paragraphs()
-        new_paragraphs = []
+        return paragraphs
+
+    def step_sentence_segmentation(self, paragraphs):
+        new_sentences = []
         for paragraph in paragraphs:
-            paragraph_remove_count_number = self.remove_count_number(paragraph)
-            paragraph_remove_number = self.remove_numbers_eng(paragraph_remove_count_number)
-            paragraph_remove_extra_whitespace_tabs = self.remove_extra_whitespace_tabs(paragraph_remove_number)
-            paragraph_to_lowercase = self.to_lowercase(paragraph_remove_extra_whitespace_tabs)
-            new_paragraphs.append(paragraph_to_lowercase)
-        return new_paragraphs
+            paragraph = self.replace_email(paragraph)
+            paragraph = self.replace_url(paragraph)
+            paragraph = self.is_end_sentence(paragraph)
+            paragraph_remove_number = self.remove_numbers_eng(paragraph)
+            paragraph_remove_extra_whitespace = self.remove_extra_whitespace_tabs(paragraph_remove_number)
+            paragraph_to_lowercase = self.to_lowercase(paragraph_remove_extra_whitespace)
+            sentences = paragraph_to_lowercase.split('.')
+            for sentence in sentences:
+                if (sentence == ' ') or (sentence == '') or (sentence == '\t'):
+                    pass
+                else:
+                    new_sentences.append(sentence)
+        return new_sentences
 
     def show_text(self):
         return self.text
