@@ -15,7 +15,7 @@ from utils.paragraph_segmentation import ParagraphSegmentation
 class PreProcessing(CleanData, ParagraphSegmentation):
     def __init__(self, text):
         self.text = text
-        ParagraphSegmentation.__init__(self, self.text)
+        ParagraphSegmentation.__init__(self, self.text, 'vietnamese')
 
     def step_clean(self):
         textRemoveHTMLTag = self.remove_html_tags(self.text)
@@ -27,7 +27,8 @@ class PreProcessing(CleanData, ParagraphSegmentation):
         paragraphs = self.show_paragraphs()
         new_paragraphs = []
         for paragraph in paragraphs:
-            paragraph_remove_number = self.remove_numbers_vn(paragraph)
+            paragraph_remove_count_number = self.remove_count_number(paragraph)
+            paragraph_remove_number = self.remove_numbers_vn(paragraph_remove_count_number)
             paragraph_remove_extra_whitespace_tabs = self.remove_extra_whitespace_tabs(paragraph_remove_number)
             paragraph_to_lowercase = self.to_lowercase(paragraph_remove_extra_whitespace_tabs)
             new_paragraphs.append(paragraph_to_lowercase)
