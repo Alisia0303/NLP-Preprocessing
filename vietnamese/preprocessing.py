@@ -15,14 +15,12 @@ class PreProcessing(CleanData):
     def __init__(self, text):
         self.text = text
 
-    def stepClean(self):
+    def step_clean(self):
         textRemoveHTMLTag = self.remove_html_tags(self.text)
-        textToLowercase = self.to_lowercase(textRemoveHTMLTag)
-        textRemoveSpecialCharacter = self.remove_special_characters_vn(textToLowercase)
-        textRemoveNumber = self.remove_numbers_vn(textRemoveSpecialCharacter)
-        self.text = textRemoveNumber
+        textRemoveSpecialCharacter = self.remove_special_characters_vn(textRemoveHTMLTag)
+        self.text = textRemoveSpecialCharacter
 
-    def showText(self):
+    def show_text(self):
         return self.text
 
     

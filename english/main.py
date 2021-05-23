@@ -11,7 +11,7 @@ if __name__ == "__main__":
     """
 
     process = PreProcessing(sample_text)
-    process.stepClean()
-    cleantext = process.showText()
+    process.step_clean()
+    cleantext = process.show_text()
     print("==========TEXT AFTER CLEAN STEP============")
     print(cleantext)
